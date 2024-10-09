@@ -19,6 +19,22 @@ class ParaphraserModel(LightningModule):
                                     labels=labels)
         return output.loss, output.logits
     
+
+    def training_step(this, batch, batch_indx: int):
+        loss = this.exe_step(batch, batch_indx)
+        this.log("train_loss", loss, prog_bar=True, logger=True)
+        return loss
+
+    def validation_step(this, batch, batch_indx: int):
+        loss = this.exe_step(batch, batch_indx)
+        this.log("val_loss", loss, prog_bar=True, logger=True)
+        return loss
+
+    def test_step(this, batch, batch_indx: int):
+        loss = this.exe_step(batch, batch_indx)
+        this.log("test_loss", loss, prog_bar=True, logger=True)
+        return loss
+
     def exe_step(this, batch: Mapping[str, Tensor], batch_indx: int):
         inputs_ids: Tensor = batch["input_ids"]
         attention_mask: Tensor = batch["attention_mask"]

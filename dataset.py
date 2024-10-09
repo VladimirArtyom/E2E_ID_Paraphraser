@@ -1,5 +1,5 @@
 import pandas as pd
-from pytorch_lightning import LightningDataModule, LightningModule
+from pytorch_lightning import LightningDataModule
 from torch.utils.data import DataLoader, Dataset
 from typing import Mapping, List
 from torch import Tensor
