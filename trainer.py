@@ -9,7 +9,7 @@ import datasets
 
 def parser_argument() -> Namespace:
     parser = ArgumentParser()
-    parser.add_argument("--dataset_path", type=int, default=1)
+    parser.add_argument("--dataset_path", type=str, default="VosLannack/qoura_id_paraphrase")
     parser.add_argument("--train_batch_size", type=int, default=1)
     parser.add_argument("--val_batch_size", type=int, default=1)
 
@@ -50,6 +50,7 @@ if __name__ == "__main__":
                                        target_max_token_length=args.target_max_length,
                                        paraphraser_token=args.paraphaser_token,
                                        tokenizer=tokenizer)
+
     model_module = ParaphraserModel(model=model,
                                    optimizer=AdamW,
                                    optimizer_lr=args.lr)

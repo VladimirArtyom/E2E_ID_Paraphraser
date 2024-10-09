@@ -22,8 +22,8 @@ class ParaphraserDataset(Dataset):
 
     def __getitem__(this, index: int) -> Mapping[str, Tensor]:
         item = this.data.iloc[index, :]      
-        input_p = item.input_paraphraser
-        target_p = item.target
+        input_p = item.question_1
+        target_p = item.question_2
 
         input_text = f"{this.paraphraser_token} {input_p}"
 
@@ -56,16 +56,16 @@ class ParaphraserDataset(Dataset):
 
 class ParaphraserDataModule(LightningDataModule):
     def __init__(this, train_set, valid_set,
-                 test_set, tokenizer,
+                 tokenizer,
                  source_max_token_length: int,
                  target_max_token_length: int,
                  paraphraser_token: str,
                  train_batch_size: int,
                  val_batch_size: int,
                  ):
+        super().__init__()
         this.train_set = train_set
         this.valid_set = valid_set
-        this.test_set = test_set
 
         this.train_batch_size = train_batch_size
         this.val_batch_size = val_batch_size
@@ -84,9 +84,6 @@ class ParaphraserDataModule(LightningDataModule):
                                                          this.target_max_token_length, this.tokenizer,
                                                          this.paraphraser_token)
 
-        this.test_dataset: Dataset = ParaphraserDataset(this.test_set, this.source_max_token_length,
-                                                        this.target_max_token_length, this.tokenizer,
-                                                        this.paraphraser_token)
     
     def train_dataloader(this) -> DataLoader:
         return DataLoader(this.train_dataset, batch_size=this.train_batch_size, shuffle=True)
@@ -94,6 +91,4 @@ class ParaphraserDataModule(LightningDataModule):
     def val_dataloader(this) -> DataLoader:
         return DataLoader(this.valid_dataset, batch_size=this.val_batch_size, shuffle=False)
 
-    def test_dataloader(this) -> DataLoader:
-        return DataLoader(this.test_dataset, batch_size=this.val_batch_size, shuffle=False)
 
